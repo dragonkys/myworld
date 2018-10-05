@@ -1,3 +1,13 @@
+/*
+ ============================================================================
+ Name        : demo1.pc
+ Author      : kys
+ Version     :
+ Copyright   : Your copyright notice
+ Description : Ansi-style
+ ============================================================================
+ */
+
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
@@ -6,6 +16,7 @@ EXEC SQL INCLUDE SQLCA;
 
 #define INIT_LEN 50
 
+// 오라클 오류를 출력해주는 함수
 void sql_error(char *msg) 
 { 
 	char err_msg[512];
@@ -37,30 +48,85 @@ MyLower(char *str)
 
 }
 
+typedef struct emp_rect
+{
+	int r_empid;
+	char r_name[51];
+	char r_email[26];
+	float r_salary;
+} EMP;
+
+
 void main()
 {
 
-	char uid[INIT_LEN], pass[INIT_LEN],tns{INIT_LEN];
+	EXEC SQL BEGIN DECLARE SECTION;
+
+	char uid[INIT_LEN], pass[INIT_LEN],tns[INIT_LEN];
+	EMP *emp_rec;
+	varchar userid[INIT_LEN], passwd[INIT_LEN], tnsname[INIT_LEN];
 	
-	EXEC SQL DECLARE BEGIN SECTION;
-	varchar userid, passwd, tnsname;
+	EXEC SQL END DECLARE SECTION;
 	
-	EXEC SQL DECLARE END SECTION;
+	emp_rec = (EMP *)malloc(sizeof(EMP));
 	
-	strcpy(uid,getenv("ORA_USER");
-	strcpy(pass,getenv("ORA_PASS");
-	strcpy(tns,getenv)"ORA_TNS");
+	if (emp_rec == 0)
+	{
+		printf("메모리가 할당되지 않았습니다. \n");
+		exit(EXIT_FAILURE);
+	}
+	
+	strcpy(uid,getenv("ORA_USER"));
+	strcpy(pass,getenv("ORA_PASS"));
+	strcpy(tns,getenv("ORA_TNS"));
 	
 	MyLower(uid);
 	MyLower(pass);
 	MyLower(tns);
 	
-	strcpy((unsigned char*)userid.arr,uid);
-	userid.len = (unsigned char*)strlen((unsigned char*)userid.arr);
+	strcpy(userid.arr,uid);
+	userid.len = strlen(userid.arr);
 	userid.arr[userid.len]= '\0';
-	
 
-	exit (EXIT_SUCCESS);	
+	strcpy(passwd.arr, pass);
+	passwd.len = strlen(passwd.arr);
+	passwd.arr[passwd.len] = '\0';
+	
+	strcpy(tnsname.arr, tns);
+	tnsname.len = strlen(tnsname.arr);
+	tnsname.arr[tnsname.len] = '\0';
+	
+//	printf("userid = [%s], passwd = [%s], tnsname = [%s] \n", userid.arr, passwd.arr, tnsname.arr);
+
+	EXEC SQL WHENEVER SQLERROR DO sql_error("ORACLE ERROR ");
+		
+	EXEC SQL connect :userid identified by :passwd using :tnsname;
+	
+	printf("오라클 DB 연결 성공 \n");
+	
+	EXEC SQL DECLARE emp_cursor CURSOR FOR
+		select employee_id, name, nvl(email,'NO MAIL') email, nvl(salary,0) salary
+		from   emp;
+		
+	EXEC SQL OPEN emp_cursor;
+	
+	EXEC SQL WHENEVER NOT FOUND DO break;
+
+	while(1)
+	{
+		EXEC SQL FETCH emp_cursor INTO :emp_rec;
+		
+		printf("%s %s %d %8.2f\n",
+		emp_rec->r_name, emp_rec->r_email, emp_rec->r_empid,emp_rec->r_salary);
+	}
+	
+	EXEC SQL CLOSE emp_cursor;
+	
+    printf("\nGOOD-BYE!!\n\n");
+
+    EXEC SQL COMMIT WORK RELEASE; 
+    
+    free(emp_rec);
+    exit(EXIT_SUCCESS); 
 }	
 
-}
