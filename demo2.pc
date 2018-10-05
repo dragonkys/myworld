@@ -1,0 +1,124 @@
+#include <stdio.h>
+#include <string.h>
+#include <stdlib.h>
+
+EXEC SQL INCLUDE SQLCA;
+
+#define INIT_LEN 50
+
+struct emp_rec
+{
+	short emp_id;
+	char emp_name[50];
+	float sal;
+};
+
+typedef struct emp_rec EMP_REC;
+
+
+void sql_error(char *msg) 
+{ 
+	char err_msg[512];
+	size_t buf_len, msg_len;
+	
+	EXEC SQL WHENEVER SQLERROR CONTINUE;
+
+	printf("\n%s\n", msg);
+	
+	/* Call sqlglm() to get the complete text of the
+	 * error message.
+	 */
+	buf_len = sizeof (err_msg);
+	sqlglm(err_msg, &buf_len, &msg_len);
+	printf("%.*s\n", msg_len, err_msg);
+	
+	EXEC SQL ROLLBACK RELEASE;
+
+	exit(EXIT_FAILURE);
+} 
+
+MyLower(char *str)
+{
+	int i;
+
+	for (i=0; i < strlen(str); i++)
+	{
+		*(str+i) = (char)tolower((char) *(str+i));
+	}
+}
+
+void main()
+{
+
+	char uid[INIT_LEN], pass[INIT_LEN], tns[INIT_LEN];
+	int empid;
+	EMP_REC *emp_rec;
+	char t_name[50];
+	
+	EXEC SQL BEGIN DECLARE SECTION;
+	varchar userid[INIT_LEN], passwd[INIT_LEN], tnsname[INIT_LEN];
+	
+	EXEC SQL END DECLARE SECTION;
+	
+	emp_rec = (EMP_REC *)malloc(sizeof(EMP_REC));
+	
+	strcpy(uid,getenv("ORA_USER"));
+	strcpy(pass,getenv("ORA_PASS"));
+	strcpy(tns,getenv("ORA_TNS"));
+	
+	MyLower(uid);
+	MyLower(pass);
+	MyLower(tns);
+	
+	strcpy((unsigned char*)userid.arr,uid);
+	userid.len = (unsigned short)strlen((unsigned char*)userid.arr);
+	userid.arr[userid.len] = '\0';
+	
+	strcpy((unsigned char*)passwd.arr, pass);
+	passwd.len = (unsigned short)strlen((unsigned char*)passwd.arr);
+	passwd.arr[passwd.len] = '\0';
+	
+	strcpy((unsigned char*)tnsname.arr, tns);
+	tnsname.len = (unsigned short)strlen((unsigned char*)tnsname.arr);
+	tnsname.arr[tnsname.len] = '\0';
+	
+	EXEC SQL WHENEVER SQLERROR DO sql_error("oracle error occur");
+	
+	EXEC SQL connect :userid identified by :passwd using :tnsname;
+	
+	printf("ORACLE CONNECT SUCCESS!!! \n");
+	
+	EXEC SQL DECLARE emp_cursor CURSOR FOR
+		select employee_id, name, salary 
+		from emp;
+		
+	EXEC SQL OPEN emp_cursor;
+	
+	EXEC SQL WHENEVER NOT FOUND DO break;
+	while(1)
+	{
+		EXEC SQL FETCH emp_cursor INTO :emp_rec;
+
+		printf("  성명                          급여  \n");
+		printf("--------------------------------------\n");
+		printf("%s  %5.2f   \n",emp_rec->emp_name,emp_rec->sal);
+		
+		strcpy(t_name, emp_rec->emp_name);
+		empid = emp_rec->emp_id;
+
+		EXEC SQL 
+			update emp 
+			set name = trim(:t_name)
+			where employee_id = :empid ;
+
+	}
+	EXEC SQL CLOSE emp_cursor;
+	
+	EXEC SQL COMMIT WORK RELEASE;
+	printf("-----  Good End	----- \n");
+		
+	free(emp_rec);
+
+	exit (EXIT_SUCCESS);	
+}	
+

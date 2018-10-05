@@ -1,0 +1,66 @@
+#include <stdio.h>
+#include <string.h>
+#include <stdlib.h>
+
+EXEC SQL INCLUDE SQLCA;
+
+#define INIT_LEN 50
+
+void sql_error(char *msg) 
+{ 
+	char err_msg[512];
+	size_t buf_len, msg_len;
+	
+	EXEC SQL WHENEVER SQLERROR CONTINUE;
+
+	printf("\n%s\n", msg);
+	
+	/* Call sqlglm() to get the complete text of the
+	 * error message.
+	 */
+	buf_len = sizeof (err_msg);
+	sqlglm(err_msg, &buf_len, &msg_len);
+	printf("%.*s\n", msg_len, err_msg);
+	
+	EXEC SQL ROLLBACK RELEASE;
+	exit(EXIT_FAILURE);
+} 
+
+MyLower(char *str)
+{
+	int i;
+
+	for (i=0; i < strlen(str); i++)
+	{
+		*(str+i) = (char)tolower((char) *(str+i));
+	}
+
+}
+
+void main()
+{
+
+	char uid[INIT_LEN], pass[INIT_LEN],tns{INIT_LEN];
+	
+	EXEC SQL DECLARE BEGIN SECTION;
+	varchar userid, passwd, tnsname;
+	
+	EXEC SQL DECLARE END SECTION;
+	
+	strcpy(uid,getenv("ORA_USER");
+	strcpy(pass,getenv("ORA_PASS");
+	strcpy(tns,getenv)"ORA_TNS");
+	
+	MyLower(uid);
+	MyLower(pass);
+	MyLower(tns);
+	
+	strcpy((unsigned char*)userid.arr,uid);
+	userid.len = (unsigned char*)strlen((unsigned char*)userid.arr);
+	userid.arr[userid.len]= '\0';
+	
+
+	exit (EXIT_SUCCESS);	
+}	
+
+}
