@@ -16,6 +16,10 @@
 
 # merge2
 	- fast 
-	- fast add add
+	- fast add
+
+# conflict
+	- 1 case : source level merge
+	- 2 case : return to before commit
+	- 3 case : go to branch 		
 	
-		
