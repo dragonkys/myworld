@@ -4,3 +4,6 @@
 	- commit
 	- push
 	
+# branch
+	- branch
+	- checkout	
