@@ -16,4 +16,5 @@
 
 # merge2
 	- fast 
+	- fast add
 		
