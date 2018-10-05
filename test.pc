@@ -1,0 +1,121 @@
+/*
+ *  test.pc
+ *
+ *  This program connects to ORACLE, declares and opens a cursor, 
+ *  fetches the names, salaries, and commissions of all
+ *  salespeople, displays the results, then closes the cursor. 
+ */ 
+
+
+#include <stdio.h>
+#include <string.h>
+#include <stdlib.h>
+#include <ctype.h>
+
+EXEC SQL INCLUDE SQLCA;
+
+MyLower(char *str)
+{
+	int i;
+
+	for (i=0; i < strlen(str); i++)
+	{
+		*(str+i) = (char)tolower((char) *(str+i));
+	}
+
+}
+
+void sql_error(char *msg) 
+{ 
+	char err_msg[512];
+	size_t buf_len, msg_len;
+	
+	EXEC SQL WHENEVER SQLERROR CONTINUE;
+	
+	printf("\n%s\n", msg);
+	
+	/* Call sqlglm() to get the complete text of the
+	 * error message.
+	 */
+	buf_len = sizeof (err_msg);
+	sqlglm(err_msg, &buf_len, &msg_len);
+	printf("%.*s\n", msg_len, err_msg);
+	
+	EXEC SQL ROLLBACK RELEASE;
+	exit(EXIT_FAILURE);
+} 
+
+void main() 
+{
+
+	char uid[50], pwd[50], tns[50];
+
+	strcpy(uid , getenv("OORA_USER"));
+	strcpy(pwd , getenv("ORA_PASS"));
+	strcpy(tns , getenv("ORA_TNS"));
+
+	MyLower(uid);
+	MyLower(pwd);
+	MyLower(tns);
+
+	EXEC SQL BEGIN DECLARE SECTION;
+	
+	VARCHAR user[20],pass[20],tnsname[20];
+	char name[20];
+	int  id;
+	int i=0;
+	
+	EXEC SQL END DECLARE SECTION;
+	
+	/*change the username here*/
+	strcpy((unsigned char*)user.arr, uid);
+	user.len=(unsigned short)strlen((unsigned char *)user.arr);
+	user.arr[user.len] = '\0';
+	
+	/*change the password here*/
+	strcpy((unsigned char*)pass.arr, pwd);
+	pass.len=(unsigned short)strlen((unsigned char *)pass.arr);
+	pass.arr[pass.len] = '\0';
+	
+	/*change the tnsname entry here*/
+	strcpy((unsigned char*)tnsname.arr, tns);
+	tnsname.len=(unsigned short)strlen((unsigned char *)tnsname.arr);
+	tnsname.arr[tnsname.len] = '\0';
+	
+	EXEC SQL WHENEVER SQLERROR DO sql_error("ORACLE error--");
+	
+	EXEC SQL CONNECT :user IDENTIFIED BY :pass USING :tnsname; 
+	printf("\nConnected to ORACLE as user: %s\n", user.arr); 
+	
+	printf("Starting to get data from emp\n");
+	
+	EXEC SQL declare emp_cursor cursor for 
+		select employee_id, name  
+		from emp;
+	
+	EXEC SQL open emp_cursor;
+	
+	EXEC SQL WHENEVER NOT FOUND DO break;
+	
+	while(1)
+	{
+		EXEC SQL fetch emp_cursor into :id, :name;
+		printf("ID is %d || Name is %s\n", id, name);
+	
+	}
+	
+	EXEC SQL close emp_cursor;
+	
+	printf("\nGOOD-BYE!!\n\n");
+	
+	
+	EXEC SQL commit work release;
+	
+	exit(EXIT_SUCCESS); 
+	
+
+}
+
+
+
+
