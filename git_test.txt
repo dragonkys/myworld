@@ -3,4 +3,6 @@
 	- add
 	- commit
 	- push
-	
+
+# add command
+	- reject 	
