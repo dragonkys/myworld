@@ -6,3 +6,7 @@
 
 # add command
 	- reject 	
+	
+# branch
+	- branch
+	- checkout	
