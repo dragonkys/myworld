@@ -1,0 +1,101 @@
+
+1. CHAR_MAP의 설정값에 따른 내부 저장형태
+
+On Input
+The following example illustrates all possible combinations of the effects of the
+CHAR_MAP option settings on the value retrieved from a database into a character
+array.
+
+Assume a database
+TABLE strdbase ( ..., strval VARCHAR2(6));
+
+which contains the following strings in the column strval:
+"" -- string of length 0
+"AB" -- string of length 2
+"KING" -- string of length 4
+"QUEEN" -- string of length 5
+"MILLER" -- string of length 6
+In a Pro*C/C++ program, initialize the 5-character host array str with 'X' characters
+and use for the retrieval of all the values in column strval:
+
+char str[5] = {'X', 'X', 'X','X', 'X'} ;
+short str_ind;  //indicator 값
+...
+EXEC SQL SELECT strval INTO :str:str_ind FROM strdbase WHERE ... ;
+with the following results for the array, str, and the indicator variable, str_ind, as
+
+CHAR_MAP is set to VARCHAR2, CHARF, CHARZ and STRING:
+
+strval    = ""         "AB"      "KING"    "QUEEN"   "MILLER"
+---------------------------------------------------------------
+VARCHAR2    " " -1     "AB " 0   "KING " 0 "QUEEN" 0 "MILLE" 6
+CHARF       "XXXXX" -1 "AB " 0   "KING " 0 "QUEEN" 0 "MILLE" 6
+CHARZ       " 0" -1    "AB 0" 0  "KING0" 0 "QUEE0" 5 "MILL0" 6
+STRING      "0XXXX" -1 "AB0XX" 0 "KING0" 0 "QUEE0" 5 "MILL0" 6
+
+where 0 stands for the null character, '\0'.
+
+
+2. 실제 사례
+Character Array On output, 
+the DBMS and CHAR_MAP options determines the
+format that a host variable character array will have in your program. 
+When CHAR_MAP=VARCHAR2, 
+host variable character arrays are blank padded up to the length
+of the array, but never null-terminated.
+When DBMS=V7 or V8 (or CHAR_MAP=CHARZ), 
+character arrays are blank padded, then null-terminated in the final
+position in the array
+
+Consider the following example of character output:
+CREATE TABLE test_char (C_col CHAR(10), V_col VARCHAR2(10));
+INSERT INTO test_char VALUES ('MILLER', 'KING');
+A precompiler program to select from this table contains the following embedded
+SQL:
+...
+char name1[10];
+char name2[10];
+...
+EXEC SQL SELECT C_col, V_col INTO :name1, :name2
+Character Data
+Advanced Topics 5-5
+FROM test_char;
+If you precompile the program with CHAR_MAP=VARCHAR2, name1 will contain:
+"MILLER####"
+that is, the name "MILLER" followed by 4 blanks, with no null-termination. (If name1
+had been declared with a size of 15, there are 9 blanks following the name.)
+name2 will contain:
+"KING######" /* 6 trailing blanks */
+If you precompile the program with DBMS=V7 or V8, name1 will contain:
+"MILLER###\0" /* 3 trailing blanks, then a null-terminator */
+that is, a string containing the name, blank-padded to the length of the column,
+followed by a null terminator. name2 will contain:
+"KING#####\0"
+In summary, if CHAR_MAP=VARCHAR2, the output from either a CHARACTER
+column or a VARCHAR2 column is blank-padded to the length of the host variable
+array. If DBMS=V7 or V8, the output string is always null-terminated.
+
+
+3. CHAR_MAP 설정변경하는 사례
+The default datatype of utext is the same as the default for any character variables,
+CHARZ, which is blank-padded and null-terminated.
+Use the CHAR_MAP precompiler option to change the default datatype, as follows:
+#include <sqlca.h>
+#include <sqlucs2.h>
+main()
+{
+utext employee1[20] ;
+/* Change to STRING datatype: */
+EXEC ORACLE OPTION (CHAR_MAP=STRING) ;
+utext employee2[20] ;
+EXEC SQL CREATE TABLE emp (ename CHAR(60)) ;
+...
+/***********************************************************
+Initializing employee1 or employee2 is compiler-dependent.
+**********************************************************/
+EXEC SQL INSERT INTO emp (ename) VALUES (:employee1) ;
+...
+EXEC SQL SELECT ename INTO :employee2 FROM emp;
+/* employee2 is now not blank-padded and is null-terminated */
+
+
