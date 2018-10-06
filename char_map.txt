@@ -35,6 +35,8 @@ STRING      "0XXXX" -1 "AB0XX" 0 "KING0" 0 "QUEE0" 5 "MILL0" 6
 
 where 0 stands for the null character, '\0'.
 
+※ CHARZ이나 STRING으로 되어있는 경우 실제 DB사이즈보다 1byte 더 크게 잡아주어야 마지막이 잘리지 않음
+
 
 2. 실제 사례
 Character Array On output, 

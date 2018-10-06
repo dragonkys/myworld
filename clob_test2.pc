@@ -1,0 +1,186 @@
+/*
+ ============================================================================
+ Name        : clob_test2.pc
+ Author      : kys
+ Version     :
+ Copyright   : Your copyright notice
+ Description : Ansi-style
+ ============================================================================
+ */
+
+#include <stdio.h>
+#include <time.h>
+#include <string.h>
+#include <stdlib.h>
+#include <ctype.h>
+#include <oratypes.h>
+
+#ifndef SQLCA_ORACLE
+# include <sqlca.h>
+#endif /* SQLCA_ORACLE */
+
+#ifndef OCI_ORACLE
+# include <oci.h>
+#endif /* OCI_ORACLE */
+
+/***********
+* Defines *
+***********/
+#define EX_SUCCESS 0
+#define EX_FAILURE 1
+#define SSS_LENGTH 12
+#define NAME_LENGTH 50 /* corresponds with max length of name in table */
+#define BUFLEN 1024
+#define MAXCRIME 5
+#define DATELENGTH 12
+#define INIT_LEN 50
+
+
+
+// 오라클 오류를 출력해주는 함수
+void sql_error(char *msg) 
+{ 
+	char err_msg[512];
+	size_t buf_len, msg_len;
+	
+	EXEC SQL WHENEVER SQLERROR CONTINUE;
+
+	printf("\n%s\n", msg);
+	
+	/* Call sqlglm() to get the complete text of the
+	 * error message.
+	 */
+	buf_len = sizeof (err_msg);
+	sqlglm(err_msg, &buf_len, &msg_len);
+	printf("%.*s\n", msg_len, err_msg);
+	
+	EXEC SQL ROLLBACK ;
+	exit(EXIT_FAILURE);
+} 
+
+void str_lower(char *str)
+{
+	int i;
+
+	for (i=0; i < strlen(str); i++)
+	{
+		*(str+i) = (char)tolower((char) *(str+i));
+	}
+
+}
+
+void ora_connect()
+{
+	EXEC SQL BEGIN DECLARE SECTION;
+
+	varchar userid[INIT_LEN], passwd[INIT_LEN], tnsname[INIT_LEN];
+	
+	EXEC SQL END DECLARE SECTION;
+
+	if (getenv("ORA_USER") == NULL)
+	{
+		printf("환경변수를 확인하기 바랍니다.\n");
+		exit(EXIT_FAILURE);
+	}
+
+	strcpy(userid.arr,getenv("ORA_USER"));
+	userid.len = strlen(getenv("ORA_USER"));
+	userid.arr[userid.len]= '\0';
+
+	strcpy(passwd.arr, getenv("ORA_PASS"));
+	passwd.len = strlen(getenv("ORA_PASS"));
+	passwd.arr[passwd.len] = '\0';
+	
+	strcpy(tnsname.arr, getenv("ORA_TNS"));
+	tnsname.len = strlen(getenv("ORA_TNS"));
+	tnsname.arr[tnsname.len] = '\0';
+
+	str_lower(userid.arr);
+	str_lower(passwd.arr);
+	str_lower(tnsname.arr);
+	
+//	printf("userid = [%s], passwd = [%s], tnsname = [%s] \n", userid.arr, passwd.arr, tnsname.arr);
+
+//	EXEC SQL WHENEVER SQLERROR DO sql_error("ora_connect(): ORACLE CONNECT ERROR ");
+
+	EXEC SQL connect :userid identified by :passwd using :tnsname;
+	
+	printf("오라클 DB 연결 성공 \n");
+
+}
+
+int main()
+{
+
+	ora_connect();
+
+	printf("\t*******************************\n");
+	printf("\t* Welcome to the DMV Database *\n");
+	printf("\t*******************************\n\n");
+
+	GetRecord();
+
+	EXEC SQL COMMIT RELEASE;
+	return (EX_SUCCESS);
+}
+
+void GetRecord()
+{
+
+	char sss[SSS_LENGTH]="670709111";
+
+	OCIClobLocator *license_txt;
+	char name[NAME_LENGTH]={'\0'};
+
+	EXEC SQL WHENEVER SQLERROR DO sql_error("GetRecord(): ORACLE ERROR ");
+
+	EXEC SQL ALLOCATE :license_txt;
+	EXEC SQL SELECT name, txt_summary INTO :name, :license_txt
+		FROM license_table WHERE sss = :sss;
+
+	printf("========================================================\n\n");
+	printf("NAME: %s\tSSS: %s\n", name, sss);
+
+	PrintCrime(license_txt);
+	printf("\n\n========================================================\n");
+
+	EXEC SQL FREE :license_txt;
+
+}
+
+
+void PrintCrime(a_clob)
+OCIClobLocator *a_clob;
+{
+	ub4 lenp;
+	printf("\n");
+	printf("=====================\n");
+	printf(" CRIME SHEET SUMMARY \n");
+	printf("=====================\n\n");
+	EXEC SQL LOB DESCRIBE :a_clob GET LENGTH INTO :lenp;
+
+printf("lenp = [%d]\n",lenp);
+
+	if(lenp == 0) /* No crime on file */
+	{
+		printf("Record is clean\n");
+	}
+	else
+	{
+		ub4 amt = lenp;
+
+		varchar *the_string = (varchar *)malloc(2 + lenp);
+		the_string->len = (ub2)lenp;
+		
+		EXEC SQL WHENEVER SQLERROR DO sql_error("PrintCrime(): ORACLE ERROR ");
+
+		EXEC SQL WHENEVER NOT FOUND CONTINUE;
+		EXEC SQL LOB READ :amt
+			FROM :a_clob INTO :the_string WITH LENGTH :lenp;
+
+printf("amt = [%d],the_string->arr = [%s], the_string->len=[%d]\n", amt,the_string->arr, the_string->len);
+		
+		printf("%.*s\n", the_string->len, the_string->arr);
+		free(the_string);
+	}
+}

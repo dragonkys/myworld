@@ -1,6 +1,6 @@
 /*
  ============================================================================
- Name        : char_map.pc
+ Name        : demo3.pc
  Author      : kys
  Version     :
  Copyright   : Your copyright notice
@@ -37,8 +37,7 @@ void sql_error(char *msg)
 	exit(EXIT_FAILURE);
 } 
 
-// str을 소문자로 변경해주는 함수
-MyLower(char *str)
+void MyLower(char *str)
 {
 	int i;
 
@@ -49,71 +48,14 @@ MyLower(char *str)
 
 }
 
-StrPrint(char *str, int len)
+void OraConn()
 {
-	int i;
-
-//	EXEC ORACLE OPTION (CHAR_MAP=VARCHAR2) ;
-//	EXEC ORACLE OPTION (CHAR_MAP=CHARF) ;
-//	EXEC ORACLE OPTION (CHAR_MAP=CHARZ) ;
-	EXEC ORACLE OPTION (CHAR_MAP=STRING) ;
-
-	printf("[");
-	for (i=0; i < len; i++)
-	{
-		printf("%c",*(str+i));
-	}
-	printf("]\n");
-
-}
-
-// emp테이블을 위한 record 구조체
-typedef struct emp_rect
-{
-	int r_empid;
-	char r_name[51];
-	char r_email[26];
-	float r_salary;
-	char r_job_id[11];
-} EMP;
-
-// emp테이블을 위한 indicator 구조체
-typedef struct ind_emp_rect
-{
-	short i_empid;
-	short i_name;
-	short i_email;
-	short i_salary;
-	short i_job_id;
-} IND_EMP;
-
-void main()
-{
-
 	EXEC SQL BEGIN DECLARE SECTION;
 
 	char uid[INIT_LEN], pass[INIT_LEN],tns[INIT_LEN];
-	EMP *emp_rec;
-	IND_EMP *ind_emp_rec;
 	varchar userid[INIT_LEN], passwd[INIT_LEN], tnsname[INIT_LEN];
 	
 	EXEC SQL END DECLARE SECTION;
-	
-	emp_rec = (EMP *)malloc(sizeof(EMP));
-	
-	if (emp_rec == 0)
-	{
-		printf("메모리가 할당되지 않았습니다. \n");
-		exit(EXIT_FAILURE);
-	}
-	
-	ind_emp_rec = (IND_EMP *)malloc(sizeof(IND_EMP));
-	
-	if (ind_emp_rec == 0)
-	{
-		printf("메모리가 할당되지 않았습니다. \n");
-		exit(EXIT_FAILURE);
-	}
 
 	strcpy(uid,getenv("ORA_USER"));
 	strcpy(pass,getenv("ORA_PASS"));
@@ -137,16 +79,41 @@ void main()
 	
 //	printf("userid = [%s], passwd = [%s], tnsname = [%s] \n", userid.arr, passwd.arr, tnsname.arr);
 
-	EXEC SQL WHENEVER SQLERROR DO sql_error("ORACLE ERROR ");
-		
 	EXEC SQL connect :userid identified by :passwd using :tnsname;
 	
 	printf("오라클 DB 연결 성공 \n");
+
+}
+
+typedef struct emp_rect
+{
+	int r_empid;
+	char r_name[51];
+	char r_email[26];
+	float r_salary;
+} EMP;
+
+
+void main()
+{
+
+	EMP *emp_rec;
+	
+	emp_rec = (EMP *)malloc(sizeof(EMP));
+	
+	if (emp_rec == 0)
+	{
+		printf("메모리가 할당되지 않았습니다. \n");
+		exit(EXIT_FAILURE);
+	}
+
+	EXEC SQL WHENEVER SQLERROR DO sql_error("ORACLE ERROR ");
+		
+	OraConn();
 	
 	EXEC SQL DECLARE emp_cursor CURSOR FOR
-		select employee_id, name, email, salary, job_id
-		from   emp
-		where  name = '김용수';
+		select employee_id, name, nvl(email,'NO MAIL') email, nvl(salary,0) salary
+		from   emp;
 		
 	EXEC SQL OPEN emp_cursor;
 	
@@ -154,18 +121,10 @@ void main()
 
 	while(1)
 	{
-		EXEC SQL FETCH emp_cursor INTO :emp_rec INDICATOR :ind_emp_rec;
+		EXEC SQL FETCH emp_cursor INTO :emp_rec;
 		
-		printf("%d %d %d %d\n",ind_emp_rec->i_name,ind_emp_rec->i_email,ind_emp_rec->i_salary,ind_emp_rec->i_job_id);
-
-		if (ind_emp_rec->i_job_id != -1)
-		{
-			printf("job_id = [%s]\n",emp_rec->r_job_id);
-			StrPrint(emp_rec->r_job_id, 11);
-		}
-
-//		printf("%s %s %d %8.2f\n",
-//		emp_rec->r_name, emp_rec->r_email, emp_rec->r_empid,emp_rec->r_salary);
+		printf("%s %s %d %8.2f\n",
+		emp_rec->r_name, emp_rec->r_email, emp_rec->r_empid,emp_rec->r_salary);
 	}
 	
 	EXEC SQL CLOSE emp_cursor;
@@ -175,7 +134,6 @@ void main()
     EXEC SQL COMMIT WORK RELEASE; 
     
     free(emp_rec);
-    free(ind_emp_rec);
     exit(EXIT_SUCCESS); 
 }	
 
