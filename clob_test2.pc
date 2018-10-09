@@ -41,7 +41,7 @@ void sql_error(char *);
 void GetRecord( void );
 void UpdRecord( void );
 void do_insert();
-ub4 read_file(char *, OCIClobLocator *);
+int read_file(char *, OCIClobLocator *);
 
 typedef struct {short len; char arr[READ_SIZE];} vr;
 
@@ -299,13 +299,13 @@ printf("[%d]",remainder);
 void do_insert()
 {
 	OCIClobLocator *clob;
-	ub4 loclen, fillen;
+	int loclen, fillen;
 	
 	char name[30]="KYS";
 	char file[100];
 	varchar key[100];
 	
-	strcpy(file,"./test.pc");
+	strcpy(file,"./demo1.pc");
 
 	strcpy(key.arr,"670709112");
 	key.len = strlen(key.arr);
@@ -313,22 +313,28 @@ void do_insert()
 
 
 	EXEC SQL ALLOCATE :clob;
-	EXEC SQL WHENEVER SQLERROR DO sql_error("do_insert():INSERT/SELECT");
 	EXEC SQL SAVEPOINT PREINSERT;
 
 	while(1)
 	{
 
+		EXEC SQL WHENEVER SQLERROR DO CONTINUE;
 		EXEC SQL INSERT
 			INTO license_table (sss, name, txt_summary) VALUES (:key, :name, '1');
 
+		EXEC SQL WHENEVER SQLERROR DO sql_error("do_insert():INSERT/SELECT");
+
 		EXEC SQL SELECT txt_summary INTO :clob
-			FROM license_table WHERE sss = :key FOR UPDATE;
+			FROM license_table 
+			WHERE sss = :key AND rownum = 1
+			ORDER BY ora_rowscn
+			FOR UPDATE;
 		printf("Inserting file '%s' under key '%.*s'...\n", file, key.len, key.arr);
 	
 		fillen = read_file(file, clob);
 		EXEC SQL LOB DESCRIBE :clob GET LENGTH INTO :loclen;
-		if ((fillen == 0) || (fillen != loclen))
+
+		if (fillen == 0)
 		{
 			printf("Problem reading file '%s'\n", file);
 			EXEC SQL ROLLBACK TO SAVEPOINT PREINSERT;
@@ -350,37 +356,36 @@ void do_insert()
 }
 
 
-ub4 read_file(filename, clob)
+int read_file(filename, clob)
 char *filename;
 OCIClobLocator *clob;
 {
 	varchar *lvr;
-	ub4 bufsize;
-	ub4 amt;
-	ub4 filelen, remainder, nbytes;
-	ub4 offset = 1;
+	int bufsize;
+	int amt;
+	int filelen, remainder, nbytes;
+	int offset = 1;
 	boolean last = FALSE;
 	FILE *in_fd;
 
 	/* Open the file for reading. */
 	in_fd = fopen(filename, "r");
 	if (in_fd == (FILE *)0)
-	return (ub4)0;
+	return (int)0;
 
 	/* Determine Total File Length - Total Amount to Write to CLOB */
 	(void) fseek(in_fd, 0L, SEEK_END);
-	amt = filelen = (ub4)ftell(in_fd);
+	amt = filelen = (int)ftell(in_fd);
 
 	/* Determine the Buffer Size and Allocate the varchar Object */
-	bufsize = 1024;
-	lvr = (varchar *)malloc(sizeof(ub4) + bufsize);
+	bufsize = 2048;
+	lvr = (varchar *)malloc(sizeof(int) + bufsize);
 	nbytes = (filelen > bufsize) ? bufsize : filelen;
 
 	/* Reset the File Pointer and Perform the Initial Read */
 	(void) fseek(in_fd, 0L, SEEK_SET);
 	lvr->len = fread((void *)lvr->arr, (size_t)1, (size_t)nbytes, in_fd);
 	remainder = filelen - nbytes;
-
 
 	EXEC SQL WHENEVER SQLERROR DO sql_error("read_file():WRITE");
 	if (remainder == 0)
