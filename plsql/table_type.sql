@@ -1,0 +1,37 @@
+-- table type 사용방법
+DECLARE
+  TYPE Lv_TABLE_REC IS RECORD ( -- RECORD TYPE선언
+    EMPNM VARCHAR2(30),
+    EMPNO VARCHAR2(5),
+	GUBUN VARCHAR2(3));  
+
+  TYPE Lv_TABLE_OF_REC IS TABLE OF Lv_TABLE_REC;  -- TABLE OF RECORD TYPE 선언 INDEX BY BINARY_INTEGER 생략한 경우
+  Lv_TABLE_OF_R Lv_TABLE_OF_REC := Lv_TABLE_OF_REC(); -- 초기화 후 변수 선언
+
+  I NUMBER;
+
+BEGIN
+
+  I := 0;
+
+  FOR EMP IN (
+    WITH TEMP1 AS (
+      SELECT '홍길동' AS EMPNM, '10001' AS EMPNO, 'A01' AS GUBUN FROM DUAL UNION ALL
+      SELECT '김말자' AS EMPNM, '10002' AS EMPNO, 'A02' AS GUBUN FROM DUAL UNION ALL
+      SELECT '홍순이' AS EMPNM, '10003' AS EMPNO, 'A03' AS GUBUN FROM DUAL)
+    SELECT EMPNM, EMPNO, GUBUN
+      FROM TEMP1
+	) LOOP
+
+    I := I + 1;
+
+    Lv_TABLE_OF_R.EXTEND; -- INDEX가 있을경우 생략가능
+    Lv_TABLE_OF_R(I).EMPNM := EMP.EMPNM;
+    Lv_TABLE_OF_R(I).EMPNO := EMP.EMPNO;
+    Lv_TABLE_OF_R(I).GUBUN := EMP.GUBUN;
+
+    dbms_output.put_line('이름: ' || Lv_TABLE_OF_R(I).EMPNM);
+    dbms_output.put_line('사번: ' || Lv_TABLE_OF_R(I).EMPNO);
+    dbms_output.put_line('구분: ' || Lv_TABLE_OF_R(I).GUBUN);
+  END LOOP;
+END; 
