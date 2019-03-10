@@ -1,0 +1,47 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <script src="http://code.jquery.com/jquery-3.2.1.min.js"></script>
+  <style>
+  @media(max-width:800px){
+    .container{
+      width: 500px;
+      height: 200px;
+      outline: 4px solid blue;
+    }
+  }
+  @media(min-width:800px) and (max-width:1200px){
+    .container{
+      width: 700px;
+      height: 200px;
+      outline: 2px solid orange;
+    }
+
+  }
+  @media(min-width:1200px){
+    .container{
+      width: 1100px;
+      height: 200px;
+      outline: 3px solid red;
+    }
+  }
+  </style>
+  <script>
+    $(document).ready(function(){
+      var $info = $("#info");
+      window.onresize = function(){
+        $info.html(window.innerWidth);
+      }
+    });
+  </script>
+</head>
+<body>
+  <div id="info">
+    info
+  </div>
+  <div class="container">
+    @media width에 따라 어떻게 다르게 보여지는지 확인해 볼까요?
+  </div>
+</body>
+</html>

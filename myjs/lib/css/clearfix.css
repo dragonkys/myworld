@@ -1,0 +1,11 @@
+@charset "UTF-8";
+
+.clearfix{
+    overflow: auto;
+}
+
+.clearfix::after{
+    clear: both;
+    display: block;
+    content: "";
+}

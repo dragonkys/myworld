@@ -1,0 +1,55 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=divice-width, initial-scale=1.0">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <title>Grid Template for Bootstrap</title>
+    <!--[if lt IE 9]>
+    <script src"../lib/js/respond.src.js"></script>
+    <script src"../lib/js/html5shiv.js"></script>
+    <![endif]  -->
+    <link href="../lib/css/bootstrap.css" rel="stylesheet">
+    <link href="../lib/css/grid.css" rel="stylesheet">
+    <script src="../lib/js/jquery-3.3.1.min.js"></script>
+    <script src="../lib/js/bootstrap.min.js"></script>
+  <style>
+    div{
+      width: 970;
+      border: 1px solid orange;
+    }
+    #info_h {
+      border: none;
+    }
+  </style>
+  <script>
+    /*
+        - 기본 컬럼 태그
+         1. xs width < 768px(auto)
+         2. sm width >= 768px(1col = 60px, container = 750px)
+         3. md width >= 992px(1col = 78px, container = 970px)
+         4. lg width >= 1024px(1col = 95px, container = 1176px)
+        - 기본 컬럼 크기 : 12컬럼
+        - fluid : 폭을 꽉차도록 하는 역할
+    */
+    $(document).ready(function(){
+      var $info = $("#info");
+      window.onresize = function(){
+        $info.html(window.innerWidth);
+      }
+    });
+  </script>
+  <div id="info_h">
+    window size : <span id="info">info</span>
+  </div><br>
+</head>
+<body>
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-md-8">테스트1</div>
+      <div class="col-md-4">테스트2</div>
+    </div>
+  </div>
+</body>
+</html>

@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <script src="../lib/js/jquery-3.3.1.min.js"></script>
+    <script>
+/*
+    jquery 사용법
+    1) 선택자  주요 method
+    $("h1").css
+    $("h1").html  => 값을 넣어주는데 html 태그를 넣는 경우 태그로 입력이 됨
+    $("h1").text  => html과 마찬가지로 값을 넣어주는데 <img와 같은 html태그도 그대로 입력이 됨
+    $("h1").attr  => 속성 부여
+
+    ex) $("h1").css("color","red") => 속성값 2개 일때 setter method
+        $("h1").css("color")       => 속성값 1개 일때 getter method
+        $("h1").html("hello")      => html과 text는 속성 1개 일때 setter method
+        $("h1").html()             => html과 text는 속성값 없을 때 getter method
+
+    2) 속성값 설정 방법
+        // A. (문자열, 문자열)
+        ex) $("h1").css("color","red")
+
+        // B. 객체
+        ex) $("h1").css({
+                "color" : "blue",
+                "background-color" : "orange"
+            })
+
+        // C. 함수의 리턴값으로 입력
+        ex) $("h1").css("color", function(){
+                return "red"
+            })
+*/
+    </script>
+</head>
+<body>
+    <h1>Hello World</h1>
+    <h1>Hello World</h1>
+    <h1>Hello World</h1>
+    <img />
+    <img />
+    <img />
+
+    <script>
+        // 1.setter - jQuery 객체 리턴
+        $("h1")
+            .css("color","red")
+
+        // 2. getter - 문자열을 리턴
+        var value = $("h1").css("color")
+        console.log(value)
+
+        $("h1").css({
+            "color" : "blue",
+            "background-color" : "orange"
+        })
+
+        var arr = ["red","blue","white"]
+        $("h1").css("color", function(index){
+            return arr[index]
+        })
+
+        var arr2 = ["blue","white","gray"]
+        $("h1").css({
+                "color" : function(index){
+                return arr2[index]
+            }
+        })
+
+        $("img").attr({
+            "src" : function(index) {
+                return "http://placehold.it/100x" + ((index + 1) * 100)
+            },
+            "alt" : "test image"
+        })
+
+        $("h1").html(
+            function(index){
+                return "<br>Hello - " + index  // html 태그도 입력 가능
+        })
+
+        $("h1").text(
+            function(index){
+                return "<br>Hello - " + index  // html 태그도 입력시 문자로 인식
+        })
+
+    </script>
+</body>
+</html>

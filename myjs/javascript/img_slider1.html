@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="../lib/css/bootstrap.css">
+    <script src="../lib/js/jquery-3.3.1.min.js"></script>
+    <script src="../lib/js/bootstrap.min.js"></script>
+    <title>이미지 슬라이더</title>
+    <style>
+    /*
+        1. position 관련
+        position : static / absolute / relative / fixed 4가지가 있음
+        div는 default로 static 이다
+        1) static을 제외하면 left, rigth, top, bottom, z-index를 지정가능하다.
+           z-index는 겹치는 순서를 조절하는 역할
+        ex) .a => z-index:1
+            .b => z-index:2를 부여하면 a위에 b가 보여진다.
+        2) parent 가 relative이고 child가 absolute이면 child는 부모크기내에서 절대좌표이용가능
+        ex) child 1은 lsft:0, top:0을 지정하고
+            child2는 rigth:0, bottom:0을 지정하면 양쪽 모서리에 위치시킬 수 있음
+
+        2. min-width, max-width
+        1) min-width => 600px로 지정하는 경우 600px이하가 되면 가로 스크롤바가 나타난다.
+           pc형 사이트로 600px이상으로 사용이 가능하다는 의미
+
+        3. overflow
+
+    */
+        * {
+            padding: 0;
+            margin: 0;
+        }
+
+        li {
+            list-style: none;
+        }
+        .container{
+            margin: 0 auto;
+        }
+
+        .header{
+            position: relative;
+            float: left;
+            margin: 0 auto;
+        }
+
+        .index-label{
+            display: inline-block;
+            background-color: orange;
+            width: 50px;
+            height: 50px;
+            text-align:center;
+            line-height: 50px;
+            font-size: 2rem;
+            color: white;
+            border-radius: 50%;
+            float: left;
+            /* margin: 10px auto; */
+        }
+
+        .title-label{
+            color: white;
+            font-size: 2rem;
+            font-weight: bold;
+            float: left;
+            margin-top: 12px;
+            margin-left: 10px;
+        }
+
+        .dot_wrapper{
+            position: absolute;
+            text-align: rigth;
+            right: 0px;
+            bottom: 0px;
+        }
+
+        .view_port{
+            position: relative;
+            margin: 0px auto;
+        }
+
+    </style>
+    <script>
+        $("document").ready(function(){
+            var length = $(".viewport li").length
+            var height = 200
+            var width = 600
+
+            $(".container").css({
+                "min-width": width,
+            })
+
+            $(".header").css ({
+                "width": width,
+            })
+
+            $(".viewport").css({
+                "height": height,
+                "width": width,
+                "overflow": "hidden"
+            })
+
+            $(".viewport ul").css("width", width * length);
+
+            $(".viewport li").css({
+                "height":  height,
+                "width": width,
+                "float": "left"
+            })
+
+            var currentIndex = 1
+
+            var moveTo = function (index){
+                // index를 입력하지 않은 경우 undefined로 넘어와서 if 에서는 false가 된다.
+                if (!index) {index = 1}
+                // 마지막 이미지인 경우에는 마지막번째가 되도록 수정
+                if ((index % length) == 0) {
+                    index = length
+                }
+                else {
+                    index = index % length
+                }
+
+                console.log("margin-left = (" + -width * index + ")")
+
+                $(".viewport ul").animate({
+                    "margin-left": -width * (index - 1)
+                })
+
+                $(".index-label").html(index);
+                $(".title-label").html($($(".viewport li")[index-1]).attr("data-title"));
+                currentIndex = index
+
+                $(".dot").css({
+                    "background-color": "orange"
+                })
+                $($(".dot")[index-1]).css({
+                    "background-color": "green"
+                })
+
+            }
+
+            $("body").css("background","gray")
+
+            for (var i=1; i <= length; i++) {
+                (function(i){
+                    $("<div class='dot'></div>")
+                        .css({
+                            "display": "inline-block",
+                            "background-color": "orange",
+                            "color": "white",
+                            "width": "12px",
+                            "height": "12px",
+                            "line-height": "12px",
+                            "text-align": "center",
+                            "font-size": "1rem",
+                            "border-radius": "50%",
+                            "margin-top": "30px",
+                            "margin-left": "5px",
+                        })
+                        .html(i)
+                        .click(function(){
+                            moveTo(i);
+                        })
+                        .appendTo(".dot_wrapper")
+                })(i)
+            }
+
+            moveTo(1)
+
+            // setInterval(function(){
+            //     currentIndex += 1
+            //     moveTo(currentIndex)
+            // }, 1000 * 3)
+
+        });
+    </script>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="index-label" width="50px"></div>
+            <div class="title-label" width="250px"></div>
+            <div class="dot_wrapper" width="200px"></div>
+        </div>
+        <div class="viewport">
+            <ul>
+                <li data-title="첫번째 이미지"><a href="#"><img src="../img/main_img_01.jpg" alt=""></a></li>
+                <li data-title="두번째 이미지"><a href="#"><img src="../img/main_img_02.jpg" alt=""></a></li>
+                <li data-title="세번째 이미지"><a href="#"><img src="../img/main_img_03.jpg" alt=""></a></li>
+                <li data-title="네번째 이미지"><a href="#"><img src="../img/main_img_04.jpg" alt=""></a></li>
+                <li data-title="다섯번째 이미지"><a href="#"><img src="../img/main_img_05.jpg" alt=""></a></li>
+                <li data-title="여섯번째 이미지"><a href="#"><img src="../img/main_img_06.jpg" alt=""></a></li>
+                <li data-title="일곱번째 이미지"><a href="#"><img src="../img/main_img_07.jpg" alt=""></a></li>
+                <li data-title="여덟번째 이미지"><a href="#"><img src="../img/main_img_08.jpg" alt=""></a></li>
+            </ul>
+        </div>
+    </div>
+</body>
+</html>
