@@ -1,0 +1,50 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <script src="http://code.jquery.com/jquery-3.2.1.min.js"></script>
+  <style>
+  @media(min-width:1024px){
+    .container{
+      width: 25%;
+      height: 200px;
+      float: left;
+      outline: 2px solid blue;
+    }
+  }
+  @media(max-width:1024px){
+    .container{
+      width: 50%;
+      height: 200px;
+      float: left;
+      outline: 2px solid blue;
+    }
+  }
+    @media(max-width:768px){
+    .container{
+      width: 100%;
+      height: 200px;
+      float: left;
+      outline: 2px solid blue;
+    }
+  }
+  </style>
+  <script>
+    $(document).ready(function(){
+      var $info = $("#info");
+      window.onresize = function(){
+        $info.html(window.innerWidth);
+      }
+    });
+  </script>
+</head>
+<body>
+  <div id="info">
+    info
+  </div>
+  <div class="container">1</div>
+  <div class="container">2</div>
+  <div class="container">3</div>
+  <div class="container">4</div>
+</body>
+</html>

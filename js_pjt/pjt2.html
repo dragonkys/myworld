@@ -1,0 +1,75 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <style>
+      html, body, img {
+        margin: 0; padding: 0; border: 0;
+      }
+      #wrap {
+        display: grid;
+        /* grid-template-columns: 40fr 60fr; */
+        grid-template-columns: 1fr 1fr 1fr;
+        /* grid-template-columns: 212px 1fr; */
+        grid-auto-rows: minmax(10em,auto);
+        grid-gap: 1rem;
+        /* justify-items: center; */
+        /* align-items: center; */
+        height: 100vh;
+        background-color: lightgrey;
+      }
+      .item:nth-child(1){
+        grid-column: 1/4;
+        font-size: 0.5em;
+      }
+      .item:nth-child(4){
+        grid-column: 3;
+        grid-row: 2/4;
+      }
+      .item:nth-child(5){
+        /* justify-self:center; */
+        /* align-self: center; */
+      }
+      .item{
+        background-color: rgba(255, 0, 0, 0.5);
+      }
+      .item:nth-child(odd) {
+        background-color: rgba(255, 255, 0, 0.5);
+      }
+    </style>
+  </head>
+  <body>
+    <div id="wrap">
+      <div class="item">
+        <img src="./img/haus1.jpg"></<img>
+        <p>교육당국은 2일 낮 12시에 개학연기 유치원과,
+          조사에 응하지 않은 유치원의 명단을 각 교육청 홈페이지에 공개하기로 했다.</p>
+          <p>교육당국은 2일 낮 12시에 개학연기 유치원과,
+            조사에 응하지 않은 유치원의 명단을 각 교육청 홈페이지에 공개하기로 했다.</p>
+      </div>
+      <div class="item">
+        <img src="./img/haus2.jpg"></<img>
+      </div>
+      <div class="item">
+        <img src="./img/haus3.jpg"></<img>
+      </div>
+      <div class="item">
+        <img src="./img/haus4.jpg"></<img>
+      </div>
+      <div class="item">
+        <img src="./img/haus5.jpg"></<img>
+      </div>
+      <div class="item">
+        <img src="./img/haus6.jpg"></<img>
+      </div>
+      <div class="item">
+        <img src="./img/haus7.jpg"></<img>
+      </div>
+      <div class="item">
+        <img src="./img/haus8.jpg"></<img>
+      </div>
+      <div class="item">
+        <img src="./img/haus9.jpg"></<img>
+      </div>
+  </body>
+</html>

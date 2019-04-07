@@ -1,0 +1,57 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=divice-width, initial-scale=1.0">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <title>Grid Template for Bootstrap</title>
+    <!--[if lt IE 9]>
+    <script src"../lib/js/respond.src.js"></script>
+    <script src"../lib/js/html5shiv.js"></script>
+    <![endif]  -->
+    <link href="../lib/css/bootstrap.css" rel="stylesheet">
+    <link href="../lib/css/grid.css" rel="stylesheet">
+    <script src="../lib/js/jquery-3.3.1.min.js"></script>
+    <script src="../lib/js/bootstrap.min.js"></script>
+  <style>
+    div {
+      outline: 1px solid orange;
+    }
+    #info_h {
+      border: none;
+    }
+  </style>
+  <script>
+    /*
+    - 기본 컬럼 태그
+     1. xs width < 576px            => Extra Small
+     2. sm width >= 576px < 768px   => Small
+     3. md width >= 768 < 992px     => middle
+     4. lg width >= 992 < 1024px    => large
+     5. xl width >= 1200px          => Extra Large
+    - 기본 컬럼 크기 : 12컬럼
+    */
+    $(document).ready(function(){
+      var $info = $("#info");
+      window.onresize = function(){
+        $info.html(window.innerWidth);
+      }
+    });
+  </script>
+  <div id="info_h">
+    window size : <span id="info">info</span>
+  </div><br>
+</head>
+<body>
+  <div class="container">
+    <div class="row">
+      <div class="col-md-8">test1</div>
+      <div class="col-md-4">test2</div>
+    </div>
+    <div class="row">
+      <div class="col-md-12">test3</div>
+    </div>
+  </div>
+</body>
+</html>

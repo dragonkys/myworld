@@ -1,0 +1,50 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <style>
+      #wrap {
+        display: flex;
+        flex-wrap: wrap;
+        height: 100vh;
+        background-color: lightgrey;
+      }
+      .item{
+        flex-basis: auto;
+        background-color: rgba(255, 0, 0, 0.5);
+      }
+      .item:nth-child(1){
+        flex:1;
+      }
+      .item:nth-child(2){
+        flex:2;
+      }
+      .item:nth-child(3){
+        flex:1;
+      }
+      .item:nth-child(odd) {
+        background-color: rgba(255, 255, 0, 0.5);
+      }
+    </style>
+  </head>
+  <body>
+    <div id="wrap">
+      <div class="item">
+        <p>AAAAAAAAAAAAAAAAA</p>
+        <p>AAAAAAAAAAAAAAAAA</p>
+        <p>AAAAAAAAAAAAAAAAA</p>
+        <p>AAAAAAAAAAAAAAAAA</p>
+        <p>AAAAAAAAAAAAAAAAA</p>
+      </div>
+      <div class="item">
+        <p>BBBBBBBBBBBBBBBBBBBBBBBBB</p>
+        <p>BBBBBBBBBBBBBBBBBBBBBBBBB</p>
+        <p>BBBBBBBBBBBBBBBBBBBBBBBBB</p>
+      </div>
+      <div class="item">
+        <p>CCCCCCCC</p>
+        <p>CCCCCCCC</p>
+        <p>CCCCCCCC</p>
+    </div>
+  </body>
+</html>

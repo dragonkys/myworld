@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <script src="./js/jquery-3.3.1.min.js"></script>
+    <script>
+/*
+    jquery 사용법
+    1) css 선택자 : 문서 객체를 선택
+    $("h1")
+    ex) $("h1").css("color","red") => 속성 정의 가능
+        $("h1").html("Hello World!!!") => 문자 입력 가능
+    2) 태그 형태의 문자열 : 문서 객체를 생성
+    $("<h1></h1>")
+    ex) $("<h2></h2>").appendTo("h1")  => 문서 생성
+
+    3) 문서 객체
+    var header = document.querySelector("h1")
+    $(header)
+*/
+    </script>
+</head>
+<body>
+    <h1></h1>
+    <script>
+        $("h1").css("color","red")
+        $("h1").css("background-color", "gray")
+        $("h1").html("Hello World!!!")
+
+        $("<br>").appendTo("body")
+
+        $("<h2></h2>")
+            .appendTo("body")
+            .css("color","black")
+            .html("test")
+
+        var header = document.querySelector("h2")
+        $(header)
+            .css("background-color","blue")
+            .css("color","white")
+    </script>
+</body>
+</html>

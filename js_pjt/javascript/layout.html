@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="../lib/css/bootstrap.css">
+    <link rel="stylesheet" href="../lib/css/reset.css">
+    <link rel="stylesheet" href="../lib/css/clearfix.css">
+    <script src="../lib/js/jquery-3.3.1.min.js"></script>
+    <script src="../lib/js/bootstrap.min.js"></script>
+    <title>표준 레이아웃(header - nav - content (left2, right 1) - footer)</title>
+    <style>
+
+    #header {
+        background: lightgrey;
+        height: 100px;
+        margin-bottom: 10px;
+    }
+
+    .header_inner {
+        width: 600px;
+        margin: 0px auto;
+    }
+
+    #nav{
+        background: lightgrey;
+        height: 50px;
+    }
+    
+    .nav_inner{
+        width: 600px;
+        margin: 0px auto;
+    }
+
+    #footer{
+        background: lightgrey;
+        height: 100px;
+    }
+
+    .footer_inner {
+        width: 600px;
+        margin: 0 auto;
+    }
+
+    #content{
+        background: lightgrey;
+        margin: 20px auto 20px auto;
+        width: 600px;
+    }
+
+    .section_main{
+        background: yellow;
+        width: 400px;
+        float: left;
+    }
+
+    .section{
+        background: green;
+        height: 200px;
+    }
+
+    .article{
+        background: orange;
+        height: 200px;
+    }
+
+    .aside {
+        background: red;
+        width: 200px;
+        height: 400px;
+        float: left;
+    }
+
+    </style>
+
+</head>
+<body>
+    <div id="header">
+        <div class="header_inner">
+            header
+        </div>
+    </div>
+
+    <div id="nav">
+        <div class="nav_inner">
+            nav
+        </div>
+    </div>
+
+    <div id="content" class="clearfix">
+        <div class="section_main">
+            <div class="section">section</div>
+            <div class="article">article</div>
+        </div>
+        <div class="aside">aside</div>
+    </div>
+
+    <div id="footer">
+        <div class="footer_inner">
+            footer
+        </div>
+    </div>
+
+</body>
+</html>

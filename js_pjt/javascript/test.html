@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<script src="../lib/js/jquery-3.3.1.min.js"></script>
+	</head>
+	<body>
+		// div>ul.data_ul>li.data_list>a>{}   마지막에 커서를 대고 ctlr+e 수행 (emmet 문법)
+		<div>
+			<ul class="data_ul">
+				<li class="data_list"><a href=""></a></li>
+				<li class="data_list"><a href=""></a></li>
+				<li class="data_list"><a href=""></a></li>
+				<li class="data_list"><a href=""></a></li>
+				<li class="data_list"><a href=""></a></li>
+				<li class="data_list"><a href=""></a></li>
+				<li class="data_list"><a href=""></a></li>
+				<li class="data_list"><a href=""></a></li>
+				<li class="data_list"><a href=""></a></li>
+				<li class="data_list"><a href=""></a></li>
+			</ul>
+		</div>
+
+		<div></div>
+		<ul>
+			<li>item 1</li>
+			<li>item 2</li>
+			<li>item 3</li>
+			<li>item 4</li>
+			<li>item 5</li>
+			<li>item 6</li>
+			<li>item 7</li>
+			<li>item 8</li>
+			<li>item 9</li>
+			<li>item 10</li>
+			<li>item 11</li>
+			<li>item 12</li>
+			<li>item 13</li>
+			<li>item 14</li>
+			<li>item 15</li>
+			<li>item 16</li>
+			<li>item 17</li>
+			<li>item 18</li>
+			<li>item 19</li>
+			<li>item 20</li>
+		</ul>
+
+		<table>
+			<tr>
+				<td>item 1</td>
+				<td>item 2</td>
+				<td>item 3</td>
+				<td>item 4</td>
+			</tr>
+			<tr>
+				<td>item 1</td>
+				<td>item 2</td>
+				<td>item 3</td>
+				<td>item 4</td>
+			</tr>
+			<tr>
+				<td>item 1</td>
+				<td>item 2</td>
+				<td>item 3</td>
+				<td>item 4</td>
+			</tr>
+			<tr>
+				<td>item 1</td>
+				<td>item 2</td>
+				<td>item 3</td>
+				<td>item 4</td>
+			</tr>
+			<tr>
+				<td>item 1</td>
+				<td>item 2</td>
+				<td>item 3</td>
+				<td>item 4</td>
+			</tr>
+		</table>
+
+		<script>
+			$(function(){
+				console.log("test world!!!");
+				$("table").css({
+					"background-color": "green",
+					"color": "white"
+				})
+			})
+
+			// A sample logging function to be added to a callbacks list
+			var foo = function( value ) {
+			  console.log( "foo:" + value );
+			};
+			 
+			var callbacks = $.Callbacks();
+			 
+			// Add the function "foo" to the list
+			callbacks.add( foo );
+			 
+			// Fire the items on the list
+			callbacks.fire( "hello" ); // Outputs: "foo: hello"
+			callbacks.fire( "world" ); // Outputs: "foo: world"
+			 
+			// Add another function to the list
+			var bar = function( value ){
+			  console.log( "bar:" + value );
+			};
+			 
+			// Add this function to the list
+			callbacks.add( bar );
+			 
+			// Fire the items on the list again
+			callbacks.fire( "hello again" );
+			// Outputs:
+			// "foo: hello again"
+			// "bar: hello again"
+
+		</script>
+	</body>
+</html>
