@@ -1,0 +1,172 @@
+<!doctype html>
+<html>
+
+<head>
+	<meta charset="utf-8">
+	<style>
+		body{
+			position: relative;
+		}
+
+		#box{
+			position: fixed;
+			display: block;
+			background-color: yellow;
+			width: 600px;
+			height: 200px;
+			left: 50%;
+			top: 50%;
+			margin-left: -300px;
+			margin-top: -100px;
+		}
+
+		.logo{
+			position: absolute;
+			display: block;
+			width:100px;
+			height:100px;
+			border: 5px solid deeppink;
+			border-radius: 50%;
+			font-size: 20px;
+			text-align: center;
+			line-height: 100px;
+		}
+
+		#div1{
+			transform:rotateY(85deg);
+			top: 20%;
+			left: -5%;
+			-webkit-animation: ani1 10s ease infinite;
+		}
+
+		#div2{
+			transform:rotateX(85deg);
+			top: 46%;
+			left: 5%;
+			-webkit-animation: ani2 10s ease infinite;
+		}
+
+		#div3{
+			top: 20%;
+			left: 27%;
+			-webkit-animation: ani3 10s ease infinite;
+		}
+
+		#div4{
+			transform: rotateY(85deg) rotateX(35deg);
+			top: 20%;
+			left: 47%;
+			-webkit-animation: ani1 10s ease infinite;
+		}
+
+		#div5{
+			transform: rotateY(-85deg) rotateX(35deg);
+			top: 20%;
+			left: 57%;
+			-webkit-animation: ani2 10s ease infinite;
+		}
+
+		#div6{
+			transform:rotateY(85deg);
+			top: 20%;
+			left: 69%;
+			-webkit-animation: ani3 10s ease infinite;
+		}
+
+		#div7{
+			transform:rotateX(85deg);
+			top: -6%;
+			left: 78%;
+			-webkit-animation: ani1 10s ease infinite;
+		}
+
+		#div8{
+			transform:rotateX(85deg);
+			top: 20%;
+			left: 78%;
+			-webkit-animation: ani2 10s ease infinite;
+		}
+
+		#div9{
+			transform:rotateX(85deg);
+			top: 46%;
+			left: 78%;
+			-webkit-animation: ani3 10s ease infinite;
+		}
+
+		@-webkit-keyframes ani1 {
+			10% {
+				transform: rotateY(360deg);
+				top: 100%;
+				background: deeppink;
+				box-shadow: 0 0 50px 5px deeppink;
+			}
+			80% {
+				top: 50%;
+				margin-top: -50px;
+				left: 50%;
+				margin-left: -50px;
+				box-shadow: 0 0 50% 5px red;
+			}
+		}
+
+		@-webkit-keyframes ani2 {
+			10% {
+				transform: rotateY(720deg);
+				top: 80%;
+				background: deeppink;
+				box-shadow: 0 0 50px 5px deeppink;
+			}
+			80% {
+				top: 50%;
+				margin-top: -50px;
+				left: 50%;
+				margin-left: -50px;
+				box-shadow: 0 0 50% 5px red;
+			}
+		}
+
+		@-webkit-keyframes ani3 {
+			10% {
+				transform: rotateY(1080deg);
+				top: 60%;
+				background: deeppink;
+				box-shadow: 0 0 50px 5px deeppink;
+			}
+			80% {
+				top: 50%;
+				margin-top: -50px;
+				left: 50%;
+				margin-left: -50px;
+				box-shadow: 0 0 50% 5px red;
+			}
+		}
+
+		#box {
+			background: transparent;
+		}
+
+		html, body {
+			background-color: #000;
+		}
+
+	</style>
+</head>
+
+
+<body>
+	<div id="box">
+		<div id="div1" class="logo"></div>
+		<div id="div2" class="logo"></div>
+		<div id="div3" class="logo"></div>
+		<div id="div4" class="logo"></div>
+		<div id="div5" class="logo"></div>
+		<div id="div6" class="logo"></div>
+		<div id="div7" class="logo"></div>
+		<div id="div8" class="logo"></div>
+		<div id="div9" class="logo"></div>
+	</div>
+
+</body>
+</html>
+
