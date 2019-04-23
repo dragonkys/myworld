@@ -1,0 +1,245 @@
+<?doctype html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<style>
+		.wrapper{
+			display: block;
+			margin: 20px auto;
+			width: 800px;
+			height: 100px;
+		}
+
+		.content{
+			display: inline-block;
+			float: left;
+			width: 100px;
+			height: 100px;
+			margin-left: 20px;
+			border-radius: 50%;
+			text-align: center;
+			line-height: 100px;
+		}
+
+		.clear{
+			clear: both;
+		}
+
+		.content.circle{
+			background: violet;
+		}
+
+		.content.ellipse1{
+			background: lightblue;
+			height: 50px;
+			line-height: 50px;
+		}
+
+		.content.ellipse2{
+			background: lightblue;
+			width: 50px;
+		}
+
+		.content2{
+			background: orange;
+			display: inline-block;
+			float: left;
+			width: 100px;
+			height: 100px;
+			margin-left: 20px;
+		}
+
+		#circle1{
+			border-radius: 100px 0px 0px 0px;
+		}
+
+		#circle2{
+			border-radius: 0px 100px 0px 0px;
+		}
+
+		#circle3{
+			border-radius: 0px 0px 100px 0px;
+		}
+
+		#circle4{
+			border-radius: 0px 0px 0px 100px;
+		}
+
+		.content3{
+			background: orange;
+			display: inline-block;
+			float: left;
+			width: 100px;
+			height: 100px;
+			margin-left: 20px;
+		}
+
+		#halfcircle1{
+			border-radius: 50px 0px 0px 50px;
+			width: 50px;
+		}
+
+		#halfcircle2{
+			border-radius: 0px 50px 50px 0px;
+			width: 50px;
+		}
+
+		#halfcircle3{
+			border-radius: 50px 50px 0px 0px;
+			height: 50px;
+		}
+
+		#halfcircle4{
+			border-radius: 0px 0px 50px 50px;
+			height: 50px;
+		}
+
+		#halfcircle5{
+			border-radius: 50px 0px 50px 0px;
+			width: 50px;
+			background: green;
+		}
+
+		#halfcircle6{
+			border-radius: 0px 50px 0px 50px;
+			width: 50px;
+			background: green;
+		}
+
+		#halfcircle7{
+			border-radius: 50px 0px 50px 0px;
+			height: 50px;
+			background: green;
+		}
+
+		#halfcircle8{
+			border-radius: 0px 50px 0px 50px;
+			height: 50px;
+			background: green;
+		}
+
+		#halfcircle9{
+			border-radius: 50px 0px 0px 50px;
+		}
+
+		#halfcircle10{
+			border-radius: 0px 50px 50px 0px;
+		}
+
+		#halfcircle11{
+			border-radius: 50px 50px 0px 0px;
+		}
+
+		#halfcircle12{
+			border-radius: 0px 0px 50px 50px;
+		}
+
+		#halfcircle13{
+			border-radius: 100px 0px 100px 0px;
+			background: green;
+		}
+
+		#halfcircle14{
+			border-radius: 0px 100px 0px 100px;
+			background: green;
+		}
+
+		#halfcircle15{
+			border-radius: 25px / 50px; /* 모든 가로는 25px, 모든 세로는 50px */
+		}
+
+		#halfcircle16{
+			border-radius: 50px / 25px; /* 모든 세로는 50px,모든 가로는 25px */
+		}
+
+		.content4{
+			display: inline-block;
+			float: left;
+			width: 0px;
+			height: 0px;
+			margin-left: 20px;
+			border: 100px solid;
+			border-color: transparent;
+		}
+
+		#triangle1{
+			border-top-color: orange;
+		}
+
+		#triangle2{
+			border-right-color: red;
+			margin-left: -80px;
+		}
+
+		#triangle3{
+			border-bottom-color: pink;
+		}
+
+		#triangle4{
+			border-left-color: green;
+		}
+	</style>
+</head>
+<body>
+	<div class="wrapper">
+		<h1>원형 모양</h1>
+		<div class="content circle">원</div>	
+		<div class="content ellipse1">타원</div>	
+		<div class="content ellipse2">타원</div>	
+	</div>
+	<div class="clear"></div>
+
+	<div class="wrapper">
+		<h1> 1/4 원형 모양</h1>
+		<div id="circle1" class="content2"></div>	
+		<div id="circle2" class="content2"></div>	
+		<div id="circle3" class="content2"></div>	
+		<div id="circle4" class="content2"></div>	
+	</div>
+	<div class="clear"></div>
+
+	<div class="wrapper">
+		<h1> 반원 모양</h1>
+		<div id="halfcircle1" class="content3"></div>	
+		<div id="halfcircle2" class="content3"></div>	
+		<div id="halfcircle3" class="content3"></div>	
+		<div id="halfcircle4" class="content3"></div>	
+	</div>
+	<div class="clear"></div></body>
+
+	<div class="wrapper">
+		<h1> 반만 원형모양</h1>
+		<div id="halfcircle9" class="content3"></div>	
+		<div id="halfcircle10" class="content3"></div>	
+		<div id="halfcircle11" class="content3"></div>	
+		<div id="halfcircle12" class="content3"></div>	
+	</div>
+	<div class="clear"></div></body>
+
+	<div class="wrapper">
+		<h1> 나뭇잎 모양</h1>
+		<div id="halfcircle5" class="content3"></div>	
+		<div id="halfcircle6" class="content3"></div>	
+		<div id="halfcircle7" class="content3"></div>	
+		<div id="halfcircle8" class="content3"></div>	
+	</div>
+	<div class="clear"></div></body>
+
+	<div class="wrapper">
+		<h1> 나뭇잎 모양2</h1>
+		<div id="halfcircle13" class="content3"></div>	
+		<div id="halfcircle14" class="content3"></div>	
+		<div id="halfcircle15" class="content3"></div>	
+		<div id="halfcircle16" class="content3"></div>	
+	</div>
+	<div class="clear"></div></body>
+
+	<div class="wrapper">
+		<h1>삼각형</h1>
+		<div id="triangle1" class="content4"></div>	
+		<div id="triangle2" class="content4"></div>	
+		<div id="triangle3" class="content4"></div>	
+		<div id="triangle4" class="content4"></div>	
+	</div>
+	<div class="clear"></div></body>
+</html>
